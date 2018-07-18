@@ -8,6 +8,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Welcome to Flutter",
+      theme: ThemeData(
+        primaryColor: Colors.yellow,
+      ),
       home: RandomWords(),
     );
   }
@@ -25,7 +28,35 @@ class RandomWordsState extends State<RandomWords> {
   final _saved = Set<WordPair>();
   final _biggestFont = const TextStyle(fontSize: 18.0);
 
-  void _pushSaved() {}
+  void _pushSaved() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+
+          final tiles = _saved.map((pair) {
+            return new ListTile(
+              title: new Text(
+                pair.asPascalCase,
+                style: _biggestFont,
+              ),
+            );
+          });
+
+          final divider = ListTile.divideTiles(
+            context: context,
+            tiles: tiles,
+          ).toList();
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("Saved Suggestions"),
+            ),
+            body: ListView(children: divider),
+          );
+        }
+      )
+    );
+  }
 
   Widget _buildRow(WordPair pair) {
     final alreadySaved = _saved.contains(pair);
